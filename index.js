@@ -29,7 +29,7 @@ const reset = () => {
 /**
  * Main function: log gas used for a transaction and optionally cost in fiat.
  */
-const log = async(asyncFn, fiatSymbol) => {
+const log = async(asyncFn, fiatSymbol = "GBP") => {
     if (Object.keys(prices).length == 1) {
         const res = await fetch('https://api.coinbase.com/v2/exchange-rates?currency=ETH');
         const json = await res.json();
