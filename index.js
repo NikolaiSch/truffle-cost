@@ -26,9 +26,9 @@ let prices = {
  */
 getFiatPrice = async fiatSymbol => {
   if (!prices[fiatSymbol]) {
-    const res = await fetch('https://api.cryptonator.com/api/ticker/eth-' + fiatSymbol.toLowerCase());
+    const res = await fetch('https://api.coinbase.com/v2/exchange-rates?currency=ETH');
     const json = await res.json();
-    const price = json.ticker.price;
+    const price = json.data.rates;
     prices[fiatSymbol] = price;
   }
 }
