@@ -92,7 +92,7 @@ function TruffleCostReporter(runner) {
                 color('pass', ' %s') +
                 color(gasColor(truffleCost.result().gasUsed), ' (%d gas used)');
             console.log(fmt, test.title, truffleCost.result().gasUsed);
-        } else {
+        } else if (!truffleCost.result().final) {
             fmt =
                 indent() +
                 color('checkmark', '  ' + Base.symbols.ok) +
@@ -104,6 +104,20 @@ function TruffleCostReporter(runner) {
                 truffleCost.result().gasUsed,
                 truffleCost.result().fiatCost,
                 truffleCost.result().fiatSymbol
+            );
+        } else {
+            fmt =
+                indent() +
+                color('checkmark', '  ' + Base.symbols.ok) +
+                color('pass', ' %s') +
+                color(gasColor(truffleCost.result().gasUsed), ' (%d gas used, %d %s, diff: %d)');
+            console.log(
+                fmt,
+                test.title,
+                truffleCost.result().gasUsed,
+                truffleCost.result().fiatCost,
+                truffleCost.result().fiatSymbol,
+                truffleCost.result().final - truffleCost.result().original
             );
         }
         truffleCost.reset();
