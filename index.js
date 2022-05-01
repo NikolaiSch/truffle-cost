@@ -5,7 +5,9 @@ const fetch = require("node-fetch")
 const result = {
     gasUsed: null,
     fiatSymbol: null,
-    fiatCost: null
+    fiatCost: null,
+    original: null,
+    final: null
 };
 
 /**
@@ -23,6 +25,8 @@ const reset = () => {
     result.gasUsed = null;
     result.fiatCost = null;
     result.fiatSymbol = null;
+    result.original = null;
+    result.final = null;
     return;
 }
 
@@ -35,16 +39,23 @@ const log = async(asyncFn, fiatSymbol = "GBP") => {
         const json = await res.json();
         prices = Object.assign(prices, json.data.rates)
     }
+
     // Transaction result.
     const txResult = await asyncFn;
     // Used gas for Mocha reporter.
-    result.gasUsed = txResult.receipt.gasUsed;
+    result.gasUsed += txResult.receipt.gasUsed;
     // If call has a fiat symbol param,
     // Fiat symbol for Mocha.
     const symbol = fiatSymbol.toUpperCase()
     result.fiatSymbol = fiatSymbol;
     let price = parseInt(prices[symbol])
-        // Fiat cost for Mocha.
+
+    if (result.original == null) {
+        result.original = txResult.receipt.gasUsed
+    } else {
+        result.final = txResult.receipt.gasUsed
+    }
+    // Fiat cost for Mocha.
     result.fiatCost = (result.gasUsed * prices.gas * price).toFixed(2);
     // Return result of transaction to Truffle TestRunner.
     return txResult;
