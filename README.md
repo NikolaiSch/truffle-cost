@@ -41,6 +41,15 @@ You can also use *from* without any problem and of course just await:
     await truffleCost.log(
       yourContract.yourFunction({from: accounts[1]})
     );
+    
+Now you are able to log multiple functions, and it will return the difference.
+This is useful for seeing how efficient Minting is:
+```
+    await truffleConsole.log(instance.mint(5));
+    await truffleConsole.log(instance.mint(6));
+    
+    ✔ should allow user1 to mint 4 then 5 Wiccas (200000 gas used, 10 GBP, diff: 30000)
+```
 
 ### Colors
 
@@ -59,8 +68,6 @@ The colors are defined in the reporter.js file and depend on the used gas:
     const myContract = await truffleCost.log(
       MyContract.new()
     );
-
-+ In the same test, if you log more the cost, only the last will be taken into account.
 
 ## Donations
 
